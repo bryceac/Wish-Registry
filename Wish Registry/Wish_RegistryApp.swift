@@ -11,7 +11,16 @@ import SwiftUI
 struct Wish_RegistryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            
+            TabView {
+                RegistryView().tabItem {
+                    Text("Items")
+                }.navigationTitle("Item Registry")
+                NoteRegistryView().tabItem {
+                    Text("Notes")
+                }.navigationTitle("Note Registry")
+            }
+            
         }
     }
 }
