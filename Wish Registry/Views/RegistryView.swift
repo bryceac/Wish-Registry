@@ -83,7 +83,7 @@ struct RegistryView: View {
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $isExporting, document: WlistFileDocument(items: items), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: items), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 showSaveSuccess = true
             }

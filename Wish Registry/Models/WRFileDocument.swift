@@ -15,7 +15,7 @@ extension UTType {
     }
 }
 
-struct WlistFileDocument {
+struct WRFileDocument {
     static var readableContentTypes: [UTType] = [
         .json,
         .tsv
@@ -36,7 +36,7 @@ struct WlistFileDocument {
     }
 }
 
-extension WlistFileDocument: FileDocument {
+extension WRFileDocument: FileDocument {
     init(configuration: ReadConfiguration) throws {
         
         if let fileData = configuration.file.regularFileContents {
