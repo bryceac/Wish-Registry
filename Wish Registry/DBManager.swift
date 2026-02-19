@@ -1,6 +1,6 @@
 //
 //  DatabaseManager.swift
-//  Wlist
+//  Wish Registry
 //
 //  Created by Bryce Campbell on 2/14/26.
 //

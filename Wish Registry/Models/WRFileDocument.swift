@@ -1,6 +1,6 @@
 //
-//  WlistFileDocument.swift
-//  Wlist
+//  WRFileDocument.swift
+//  Wish Registry
 //
 //  Created by Bryce Campbell on 2/16/26.
 //

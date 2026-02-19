@@ -1,6 +1,6 @@
 //
 //  NoteView.swift
-//  Wlist
+//  Wish Registry
 //
 //  Created by Bryce Campbell on 2/15/26.
 //
