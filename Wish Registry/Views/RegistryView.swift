@@ -192,9 +192,7 @@ struct RegistryView: View {
     func importItems(_ items: [Item]) {
         guard let manager = DB.shared.manager else { return }
         
-        for item in items {
-            try? manager.updateOrAdd(item: item)
-        }
+        try? manager.updateOrAdd(items: items)
         
         loadItems()
     }
