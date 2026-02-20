@@ -9,24 +9,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct RegistryView: View {
-    @State var items: [Item] = []
+    @State var items: Store = Store()
     @State var showSaveSuccess = false
     @State var isExporting = false
     @State var isImporting = false
     @State var exportFormat: UTType? = nil
     @State var isLoading = false
-    
-    var sortedItems: [Item] {
-        get {
-            items.sorted { firstItem, secondItem in
-                firstItem.priority > secondItem.priority
-            }
-        }
-        
-        set(newValues) {
-            importItems(newValues)
-        }
-    }
     
     var body: some View {
         NavigationStack {
@@ -219,7 +207,7 @@ struct RegistryView: View {
 }
 
 #Preview {
-    RegistryView(items: [
+    RegistryView(store: Store(withItems: [
         Item("9F432FA2-12D2-4B61-AA55-319D23601C4E\tNintendo Switch 2\t1\thighest\thttps://example.com/nintendo-switch-2"),
         Item("15278603-03F1-41E0-81ED-6E94883F9AC7\tMario Kart World\t1\thigh\thttps://example.com/mario-kart-world"),
         Item("C58232DE-AD35-4188-9736-66BC7CA52E09\tTrails in the Sky the 1st\t1\tmedium\thttps://example.com/trails-in-the-sky")
