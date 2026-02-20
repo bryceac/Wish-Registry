@@ -27,9 +27,11 @@ struct RegistryView: View {
                             Binding {
                                 return item
                             } set: { newValue in
-                                guard var storedItem = items.sortedItems[id: item.id] else { return }
+                                guard let storedItemIndex = items.sortedItems.firstIndex(where: {
+                                    $0.id == item.id
+                                }) else { return }
                                 
-                                storedItem = newValue
+                                items.sortedItems[storedItemIndex] = newValue
                             }
 
                         }
