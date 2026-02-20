@@ -213,7 +213,7 @@ class DBManager {
     func update(item: Item) throws {
         guard let storedItem = items.first(where: { housedItem in
             housedItem.id == item.id
-        }) else { return }
+        }), storedItem != item else { return }
         
         let itemRecord = itemTable.filter(itemID == item.id)
         
@@ -253,7 +253,6 @@ class DBManager {
         if let _ = items.first(where: { storedItem in
             storedItem.id.caseInsensitiveCompare(item.id) == .orderedSame
         }) {
-            
             try update(item: item)
         } else {
             try add(item: item)
