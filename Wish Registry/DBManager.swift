@@ -258,4 +258,10 @@ class DBManager {
             try add(item: item)
         }
     }
+    
+    func updateOrAdd(items: [Item]) throws {
+        for item in items {
+            try updateOrAdd(item: item)
+        }
+    }
 }
