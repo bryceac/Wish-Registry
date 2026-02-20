@@ -132,14 +132,9 @@ struct RegistryView: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            let item = sortedItems[index]
+            let item = items.sortedItems[index]
             
-            if let index = items.firstIndex(where: { storedItem in
-                
-                storedItem.id == item.id
-            }) {
-                items.remove(at: index)
-            }
+            items.sortedItems.remove(at: index)
             
             try? DB.shared.manager?.delete(item: item)
         }
@@ -169,7 +164,7 @@ struct RegistryView: View {
         
         Task {
             let items = await retrieveItems()
-            self.items = items
+            self.items = Store(withItems: items)
             
             isLoading = false
         }

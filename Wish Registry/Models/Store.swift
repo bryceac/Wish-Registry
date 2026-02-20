@@ -7,7 +7,7 @@
 import IdentifiedCollections
 
 struct Store {
-    var items: IdentifiedArrayOf<Item> = []
+    var items: IdentifiedArrayOf<Item>
     
     var sortedItems: IdentifiedArrayOf<Item> {
         get {
