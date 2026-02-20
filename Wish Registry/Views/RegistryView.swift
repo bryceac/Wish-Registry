@@ -23,8 +23,8 @@ struct RegistryView: View {
             }
         }
         
-        set {
-            
+        set(newValues) {
+            importItems(newValues)
         }
     }
     
