@@ -212,11 +212,11 @@ struct RegistryView: View {
 }
 
 #Preview {
-    RegistryView(store: Store(withItems: [
+    RegistryView(items: Store(withItems: [
         Item("9F432FA2-12D2-4B61-AA55-319D23601C4E\tNintendo Switch 2\t1\thighest\thttps://example.com/nintendo-switch-2"),
         Item("15278603-03F1-41E0-81ED-6E94883F9AC7\tMario Kart World\t1\thigh\thttps://example.com/mario-kart-world"),
         Item("C58232DE-AD35-4188-9736-66BC7CA52E09\tTrails in the Sky the 1st\t1\tmedium\thttps://example.com/trails-in-the-sky")
     ].compactMap({ item in
         item
-    }))
+    })))
 }
