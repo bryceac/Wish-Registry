@@ -13,7 +13,7 @@ struct NoteDetailView: View {
     var body: some View {
         Form {
             ZStack(alignment: .topLeading) {
-                TextEditor(text: $note.content).frame(minWidth: 50, idealWidth: 60, maxWidth: 100, minHeight: 50, idealHeight: 60, maxHeight: 100)
+                TextEditor(text: $note.content)
                 
                 if note.content.isEmpty {
                     VStack {
