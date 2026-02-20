@@ -20,12 +20,23 @@ struct RegistryView: View {
         NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    ForEach(sortedItems.indices, id: \.self) { index in
+                    ForEach(items.sortedItems) { item in
+                        
+                        var itemBinding: Binding<Item> {
+                            Binding {
+                                return item
+                            } set: { newValue in
+                                guard var storedItem = store.sortedItems[id: item.id] else { return }
+                                
+                                storedItem = newValue
+                            }
+
+                        }
                         
                         NavigationLink {
-                            ItemDetailView(item: $sortedItems[index])
+                            ItemDetailView(item: itemBinding)
                         } label: {
-                            ItemView(item: sortedItems[index])
+                            ItemView(item: item)
                         }
                     }.onDelete(perform: delete)
                 }.toolbar {
