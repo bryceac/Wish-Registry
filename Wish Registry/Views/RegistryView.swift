@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import IdentifiedCollections
 
 struct RegistryView: View {
     @State var items: Store = Store()
@@ -26,7 +27,7 @@ struct RegistryView: View {
                             Binding {
                                 return item
                             } set: { newValue in
-                                guard var storedItem = store.sortedItems[id: item.id] else { return }
+                                guard var storedItem = items.sortedItems[id: item.id] else { return }
                                 
                                 storedItem = newValue
                             }
@@ -71,11 +72,9 @@ struct RegistryView: View {
                         }
 
                     }
-                }.onChange(of: items) {
-                    if let lastIndex = items.indices.last, let storedItem = sortedItems.first(where: { housedItem in
-                        items[lastIndex].id == housedItem.id
-                    }) {
-                        proxy.scrollTo(storedItem.id)
+                }.onChange(of: items.items) {
+                    if let lastIndex = items.items.indices.last {
+                        proxy.scrollTo(items.items[lastIndex].id)
                     }
                 }
             }
@@ -87,7 +86,7 @@ struct RegistryView: View {
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: items), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: items.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 showSaveSuccess = true
             }
