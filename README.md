@@ -1,71 +1,80 @@
-# Wish Registry
+=Wish Registry=
 
-**Author:** Bryce Campbell
+'''Author:''' Bryce Campbell
 
-**License:** See LICENSE
+'''License:''' See LICENSE
 
-**Description:** iOS port of a CLI application that I wrote in Rust that can be used to generate a wish list in HTML.
+'''Description:''' iOS port of a CLI application that I wrote in Rust that can be used to generate a wish list in HTML.
 
-**Version:** 0.1
+'''Version:''' 0.1
 
-## Notes
+==Notes==
 
 This application has been tested on iOS 26. It is not currently known how well it will run elsewhere.
 
-### Questions
+===Questions===
 
-1. <dl>
-  <dt style="font-weight:bold" id="q1">Why create this application when there are so many others options for wish lists?</dt>
+<ol>
+<li id="q1">
+<dl>
+  <dt style="font-weight:bold">Why create this application when there are so many others options for wish lists?</dt>
   <dd>
-    While there are indeed many wish list applications out there, 
-    they all seem to rely on the Internet, which is fine if everything you want is online to begin with, but I would rather not deal with the complications involved.
-    Also, I currently make my own wish lists by hand via the following process:
-
-  * Create a list</li>
-  * Generate and clean up HTML</li>
-  * Add notes to HTML</li>
-  * Add styles to the HTML, to make it friendly for touch screen and print
-
-  Even though I don't intend for this application to do all of that, I do want it to be able to generate a HTML list with the notes included, 
-  so that I can focus on adding the appropriate style rules myself.
+  <p>While there are indeed many wish list applications out there, 
+  they all seem to rely on the Internet, which is fine if everything you want is online to begin with, but I would rather not deal with the complications involved.
+  Also, I currently make my own wish lists by hand via the following process:</p>
+  <ul>
+  <li>Create a list</li>
+  <li>Generate and clean up HTML</li>
+  <li>Add notes to HTML</li>
+  <li>Add styles to the HTML, to make it friendly for touch screen 
+  and print friendly</li>
   
-  However, this application does include some styling stuff in the HTML export that I like adding in, to make the HTML more readable on modern phones.
 
-  Other than that, I wanted to both be able to challenge myself a bit more and even make it so that I do not need to rely on the [original program](https://github.com/bryceac/wlist) I wrote.
+  <p>Even though I don't intend for this application to do all of that, I do want it to be able to generate a HTML list with the notes included, 
+  so that I can focus on adding the appropriate style rules myself.</p>
+  
+  <p>However, this application does include some styling stuff in the HTML export that I like adding in, to make the HTML more readable on modern phones.</p>
+
+  <p>Other than that, I wanted to both be able to challenge myself a bit more and even make it so that I do not need to rely on the <a href="https://github.com/bryceac/wlist">original program</a> I wrote.</p>
   </dd>
 </dl>
-
-2. <dl>
-<dt style="font-weight:bold" id="q2">Can I include images with my items?</dt>
+</li>
+<li id="q2">
+<dl>
+<dt style="font-weight:bold">Can I include images with my items?</dt>
 <dd>
-While this might seem like a nice thing to have, that is not within the scope of this project, which is to quickly generate an HTML page that can then be customized later on.
+<p>While this might seem like a nice thing to have, that is not within the scope of this project, which is to quickly generate an HTML page that can then be customized later on.</p>
 
-Also, another issue with implementing this that many online stores have an API to be able to grab images, integrating those APIs can be a huge pain, due to unknowns, like one place using different keys from another.
+<p>Also, another issue with implementing this that many online stores have an API to be able to grab images, integrating those APIs can be a huge pain, due to unknowns, like one place using different keys from another.</p>
 
-However, the biggest issue with including images is that, outside PDF and a few other options, it does not make things easy to tsend off to others without use of a server.
+<p>However, the biggest issue with including images is that, outside PDF and a few other options, it does not make things easy to tsend off to others without use of a server.</p>
 
-If you want this, I suggest looking elsewhere.
+<p>If you want this, I suggest looking elsewhere.</p>
 </dd>
 </dl>
-
-3. <dl>
-<dt style="font-weight:bold", id="q3">Since you want to be able to provide a template that people can edit quickly afterwards, is it possible to do those customizations in this app itself?</dt>
+</li>
+<li id="q3">
+<dl>
+<dt style="font-weight:bold">Since you want to be able to provide a template that people can edit quickly afterwards, is it possible to do those customizations in this app itself?</dt>
 <dd>
-This is a good idea and one that I have thought about, but I chose not too because everyone's preferences can differ at any time.
+<p>This is a good idea and one that I have thought about, but I chose not too because everyone&#39;s preferences can differ at any time.</p>
 
-The HTML generated by this app does include things to allow things to be flexible based on screen size, to ensure readability, and I may add the CSS rules to apply double spacing on space screens, but the best flexibility is usally to be had from editing the HTMl yourself.
+<p>The HTML generated by this app does include things to allow things to be flexible based on screen size, to ensure readability, and I may add the CSS rules to apply double spacing on space screens, but the best flexibility is usally to be had from editing the HTMl yourself.</p>
 </dd>
 </dl>
-
-4. <dl>
-<dt style="font-weight:bold" id="q4">Will this be available for macOS?</dt>
+</li>
+<li id="q4">
+<dl>
+<dt style="font-weight:bold">Will this be available for macOS?</dt>
 <dd>
-While I do not plan to prevent anybody from being able to use this app on macOS, I have had issues recently with my [last app](https://github.com/bryceac/BCheckbook) that prevent me from pushing updates at this time.
+<p>While I do not plan to prevent anybody from being able to use this app on macOS, I have had issues recently with my <a href="https://github.com/bryceac/BCheckbook">last app</a> that prevent me from pushing updates at this time.</p>
 
-Even though I don't know at ths time if my problems will be fixed by replacing the computer I use for testing or not, I am using at least two libraries in this project that I have also used in the app I just linked to, so the issues I had with that app will likely surface with this too.
+<p>Even though I don't know at ths time if my problems will be fixed by replacing the computer I use for testing or not, I am using at least two libraries in this project that I have also used in the app I just linked to, so the issues I had with that app will likely surface with this too.</p>
 
-If you wish to be able to do what you can with this application, please check out the link list in the <a href="#q1">first question</a>.
+<p>If you wish to be able to do what you can with this application, please check out the link list in the <a href="#q1">first question</a>.</p>
 
-Please note that the HTML produced by the original program is more geared towards Desktops and is commandline based.
+<p>Please note that the HTML produced by the original program is more geared towards Desktops and is commandline based.</p>
 </dd>
 </dl>
+</li>
+</o>
