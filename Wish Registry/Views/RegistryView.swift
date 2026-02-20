@@ -40,7 +40,7 @@ struct RegistryView: View {
                         NavigationLink {
                             ItemDetailView(item: itemBinding)
                         } label: {
-                            ItemView(item: sortedItems[index])
+                            ItemView(item: sortedItems[index]).id(sortedItems[index].id)
                         }
                     }.onDelete(perform: delete)
                 }.toolbar {
@@ -76,8 +76,10 @@ struct RegistryView: View {
 
                     }
                 }.onChange(of: items) {
-                    if let lastIndex = sortedItems.indices.last {
-                        proxy.scrollTo(<#T##ID#>)
+                    if let lastIndex = items.indices.last, let storedItem = sortedItems.first(where: { housedItem in
+                        items[lastIndex].id == housedItem.id
+                    }) {
+                        proxy.scrollTo(storedItem.id)
                     }
                 }
             }
