@@ -24,55 +24,61 @@ struct RegistryView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(sortedItems.indices, id: \.self) { index in
-                    
-                    var itemBinding: Binding<Item> {
-                        Binding {
-                            return sortedItems[index]
-                        } set: { newItem in
-                            try? DB.shared.manager?.update(item: newItem)
+            ScrollViewReader { proxy in
+                List {
+                    ForEach(sortedItems.indices, id: \.self) { index in
+                        
+                        var itemBinding: Binding<Item> {
+                            Binding {
+                                return sortedItems[index]
+                            } set: { newItem in
+                                try? DB.shared.manager?.update(item: newItem)
+                                
+                                loadItems()
+                            }
+                        }
+                        NavigationLink {
+                            ItemDetailView(item: itemBinding)
+                        } label: {
+                            ItemView(item: sortedItems[index])
+                        }
+                    }.onDelete(perform: delete)
+                }.toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Menu("Options") {
+                            Button("Export Items") {
+                                isExporting = true
+                                exportFormat = .json
+                            }
+                            Button("Export Items to TSV") {
+                                isExporting = true
+                                exportFormat = .tsv
+                            }
+                            Button("Export Wishlist") {
+                                isExporting = true
+                                exportFormat = .html
+                            }
+                            Button("Import Items") {
+                                isImporting = true
+                            }
+                        }
+                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        Button {
+                            let item = Item()
+                            
+                            try? DB.shared.manager?.add(item: item)
                             
                             loadItems()
+                        } label: {
+                            Image(systemName: "plus")
                         }
-                    }
-                    NavigationLink {
-                        ItemDetailView(item: itemBinding)
-                    } label: {
-                        ItemView(item: sortedItems[index])
-                    }
-                }.onDelete(perform: delete)
-            }.toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu("Options") {
-                        Button("Export Items") {
-                            isExporting = true
-                            exportFormat = .json
-                        }
-                        Button("Export Items to TSV") {
-                            isExporting = true
-                            exportFormat = .tsv
-                        }
-                        Button("Export Wishlist") {
-                            isExporting = true
-                            exportFormat = .html
-                        }
-                        Button("Import Items") {
-                            isImporting = true
-                        }
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        let item = Item()
-                        
-                        try? DB.shared.manager?.add(item: item)
-                        
-                        loadItems()
-                    } label: {
-                        Image(systemName: "plus")
-                    }
 
+                    }
+                }.onChange(of: items) {
+                    if let lastIndex = sortedItems.indices.last {
+                        proxy.scrollTo(<#T##ID#>)
+                    }
                 }
             }
         }.onAppear {

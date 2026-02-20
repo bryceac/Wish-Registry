@@ -105,6 +105,12 @@ extension Item {
     }
 }
 
+extension Item: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id.caseInsensitiveCompare(rhs.id) == .orderedSame
+    }
+}
+
 extension Array where Element == Item {
     var data: Data? {
         let jsonEncoder = JSONEncoder()
