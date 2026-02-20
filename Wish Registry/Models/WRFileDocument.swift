@@ -90,7 +90,7 @@ extension WRFileDocument: FileDocument {
     }
     
     func registry(item: Item) -> String {
-        var details = item.quantity > 1 ? "\(item.quantity)" :
+        var details = item.quantity > 1 ? "\(item.quantity) " :
         ""
 
         let notes = uniqueNotes()
