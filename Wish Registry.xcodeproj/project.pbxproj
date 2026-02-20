@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0271F1182F46AA4600948BE3 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 0271F1172F46AA4600948BE3 /* Collections */; };
 		0271F11B2F46AA8500948BE3 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0271F11A2F46AA8500948BE3 /* SQLite */; };
+		02A15E472F490E410016B9D9 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 02A15E462F490E410016B9D9 /* IdentifiedCollections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A15E472F490E410016B9D9 /* IdentifiedCollections in Frameworks */,
 				0271F11B2F46AA8500948BE3 /* SQLite in Frameworks */,
 				0271F1182F46AA4600948BE3 /* Collections in Frameworks */,
 			);
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				0271F1172F46AA4600948BE3 /* Collections */,
 				0271F11A2F46AA8500948BE3 /* SQLite */,
+				02A15E462F490E410016B9D9 /* IdentifiedCollections */,
 			);
 			productName = "Wish Registry";
 			productReference = 0271F0EB2F46A82600948BE3 /* Wish Registry.app */;
@@ -106,6 +109,7 @@
 			packageReferences = (
 				0271F1162F46AA4500948BE3 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				0271F1192F46AA8500948BE3 /* XCRemoteSwiftPackageReference "SQLite" */,
+				02A15E452F490E410016B9D9 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0271F0EC2F46A82600948BE3 /* Products */;
@@ -367,6 +371,14 @@
 				minimumVersion = 0.15.5;
 			};
 		};
+		02A15E452F490E410016B9D9 /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -379,6 +391,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0271F1192F46AA8500948BE3 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
+		};
+		02A15E462F490E410016B9D9 /* IdentifiedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02A15E452F490E410016B9D9 /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
+			productName = IdentifiedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
