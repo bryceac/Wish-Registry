@@ -25,5 +25,7 @@ struct Store {
         }
     }
     
-    
+    init(withItems items: [Item] = []) {
+        self.items = IdentifiedArray(uniqueElements: items)
+    }
 }
