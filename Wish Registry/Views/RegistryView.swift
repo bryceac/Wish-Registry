@@ -40,7 +40,7 @@ struct RegistryView: View {
                         NavigationLink {
                             ItemDetailView(item: itemBinding)
                         } label: {
-                            ItemView(item: sortedItems[index]).id(sortedItems[index].id)
+                            ItemView(item: sortedItems[index])
                         }
                     }.onDelete(perform: delete)
                 }.toolbar {
