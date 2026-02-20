@@ -17,26 +17,27 @@ This application has been tested on iOS 26. It is not currently known how well i
 <ol>
 <li id="q1">
 <dl>
-  <dt style="font-weight:bold">Why create this application when there are so many others options for wish lists?</dt>
-  <dd>
-  <p>While there are indeed many wish list applications out there, 
-  they all seem to rely on the Internet, which is fine if everything you want is online to begin with, but I would rather not deal with the complications involved.
-  Also, I currently make my own wish lists by hand via the following process:</p>
-  <ul>
-  <li>Create a list</li>
-  <li>Generate and clean up HTML</li>
-  <li>Add notes to HTML</li>
-  <li>Add styles to the HTML, to make it friendly for touch screen 
-  and print friendly</li>
+<dt style="font-weight:bold">Why create this application when there are so many others options for wish lists?</dt>
+<dd>
+<p>While there are indeed many wish list applications out there, 
+they all seem to rely on the Internet, which is fine if everything you want is online to begin with, but I would rather not deal with the complications involved.
+Also, I currently make my own wish lists by hand via the following process:</p>
+<ul>
+ <li>Create a list</li>
+ <li>Generate and clean up HTML</li>
+<li>Add notes to HTML</li>
+<li>Add styles to the HTML, to make it friendly for touch screen 
+and print friendly</li>
+</ul>
   
 
-  <p>Even though I don't intend for this application to do all of that, I do want it to be able to generate a HTML list with the notes included, 
-  so that I can focus on adding the appropriate style rules myself.</p>
+<p>Even though I don't intend for this application to do all of that, I do want it to be able to generate a HTML list with the notes included, 
+so that I can focus on adding the appropriate style rules myself.</p>
   
-  <p>However, this application does include some styling stuff in the HTML export that I like adding in, to make the HTML more readable on modern phones.</p>
+<p>However, this application does include some styling stuff in the HTML export that I like adding in, to make the HTML more readable on modern phones.</p>
 
-  <p>Other than that, I wanted to both be able to challenge myself a bit more and even make it so that I do not need to rely on the <a href="https://github.com/bryceac/wlist">original program</a> I wrote.</p>
-  </dd>
+<p>Other than that, I wanted to both be able to challenge myself a bit more and even make it so that I do not need to rely on the <a href="https://github.com/bryceac/wlist">original program</a> I wrote.</p>
+</dd>
 </dl>
 </li>
 <li id="q2">
@@ -77,4 +78,4 @@ This application has been tested on iOS 26. It is not currently known how well i
 </dd>
 </dl>
 </li>
-</o>
+</ol>
