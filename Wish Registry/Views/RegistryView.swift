@@ -17,8 +17,14 @@ struct RegistryView: View {
     @State var isLoading = false
     
     var sortedItems: [Item] {
-        items.sorted { firstItem, secondItem in
-            firstItem.priority > secondItem.priority
+        get {
+            items.sorted { firstItem, secondItem in
+                firstItem.priority > secondItem.priority
+            }
+        }
+        
+        set {
+            
         }
     }
     
@@ -28,17 +34,8 @@ struct RegistryView: View {
                 List {
                     ForEach(sortedItems.indices, id: \.self) { index in
                         
-                        var itemBinding: Binding<Item> {
-                            Binding {
-                                return sortedItems[index]
-                            } set: { newItem in
-                                try? DB.shared.manager?.update(item: newItem)
-                                
-                                loadItems()
-                            }
-                        }
                         NavigationLink {
-                            ItemDetailView(item: itemBinding)
+                            ItemDetailView(item: $sortedItems[index])
                         } label: {
                             ItemView(item: sortedItems[index])
                         }
