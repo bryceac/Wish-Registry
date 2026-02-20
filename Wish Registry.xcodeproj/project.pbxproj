@@ -15,22 +15,9 @@
 		0271F0EB2F46A82600948BE3 /* Wish Registry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wish Registry.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0271F13E2F46AAC200948BE3 /* Exceptions for "Wish Registry" folder in "Wish Registry" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Wish-Registry-Info.plist",
-			);
-			target = 0271F0EA2F46A82600948BE3 /* Wish Registry */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0271F0ED2F46A82600948BE3 /* Wish Registry */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				0271F13E2F46AAC200948BE3 /* Exceptions for "Wish Registry" folder in "Wish Registry" target */,
-			);
 			path = "Wish Registry";
 			sourceTree = "<group>";
 		};
