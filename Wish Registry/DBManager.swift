@@ -253,6 +253,7 @@ class DBManager {
         if let _ = items.first(where: { storedItem in
             storedItem.id.caseInsensitiveCompare(item.id) == .orderedSame
         }) {
+            
             try update(item: item)
         } else {
             try add(item: item)

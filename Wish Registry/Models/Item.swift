@@ -107,7 +107,11 @@ extension Item {
 
 extension Item: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.id.caseInsensitiveCompare(rhs.id) == .orderedSame
+        return lhs.id.caseInsensitiveCompare(rhs.id) == .orderedSame &&
+        lhs.name == rhs.name &&
+        lhs.quantity == rhs.quantity &&
+        lhs.priority == rhs.priority &&
+        lhs.url == rhs.url
     }
 }
 
