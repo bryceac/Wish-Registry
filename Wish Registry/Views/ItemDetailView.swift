@@ -60,40 +60,6 @@ struct ItemDetailView: View {
             
             TextField("URL", text: urlBinding).submitLabel(.done)
             
-            /* Section(header: HStack { Text("Notes")
-                Spacer()
-                Button("", systemImage: "plus") {
-                    try? DB.shared.manager?.add(note: "")
-                    
-                    item.notes.append(DB.shared.manager!.notes.last!.content)
-                    
-                    try? DB.shared.manager?.link(noteWithID: DB.shared.manager!.notes.last!.id, toItemWithID: item.id)
-                    
-                    presentNoteEditor = true
-                    
-                }.sheet(isPresented: $presentNoteEditor) {
-                    presentNoteEditor = false
-                } content: {
-                    NoteDetailView(note: recentNoteBinding)
-                }
-            }) {
-                List(DB.shared.manager!.notes) { note in
-                    
-                    SelectableNoteView(note: note, isSelected: item.notes.contains(note.content)) { note in
-                        if item.notes.contains(note.content), let noteIndex = item.notes.firstIndex(of: note.content) {
-                            item.notes.remove(at: noteIndex)
-                            
-                            try? DB.shared.manager!.removeLink(betweenItemWithID: item.id, andNoteWithID: note.id)
-                        } else {
-                            item.notes.append(note.content)
-                            
-                            try? DB.shared.manager!.link(noteWithID: note.id, toItemWithID: item.id)
-                        }
-                    }
-                    
-                }
-            } */
-            
             Section(isExpanded: $revealNotes) {
                 List {
                     ForEach(DB.shared.manager!.notes) { note in
