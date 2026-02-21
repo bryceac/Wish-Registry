@@ -16,12 +16,11 @@ struct RegistryView: View {
         NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    ForEach(viewModel.store.sortedItems) { item in
-                        
+                    ForEach(viewModel.store.sortedItems.indices, id: \.self) { index in
                         NavigationLink {
-                            ItemDetailView(item: item)
+                            ItemDetailView(item: $viewModel.store.sortedItems[index])
                         } label: {
-                            ItemView(item: item)
+                            ItemView(item: viewModel.store.sortedItems[index])
                         }
                     }.onDelete(perform: viewModel.delete)
                 }.toolbar {
@@ -70,7 +69,7 @@ struct RegistryView: View {
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.sortedItems.elements), contentType: viewModel.exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.store.sortedItems.elements), contentType: viewModel.exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 viewModel.showSaveSuccess = true
             }
@@ -80,18 +79,9 @@ struct RegistryView: View {
                     
                     switch file.pathExtension {
                     case "json":
-                        Task {
-                            let parsedItems = await viewModel.items(fromJSON: file)
-                            
-                            viewModel.importItems(parsedItems)
-                        }
-                        
+                        viewModel.loadItems(fromJSON: file)
                     default:
-                        Task {
-                            let parsedItems = await viewModel.items(fromTSV: file)
-                            
-                            viewModel.importItems(parsedItems)
-                        }
+                        viewModel.loadItems(fromTSV: file)
                     }
                 }
             }
@@ -99,16 +89,12 @@ struct RegistryView: View {
             switch fileURL.pathExtension {
             case "json":
                 Task {
-                    let parsedItems = await viewModel.items(fromJSON: fileURL)
-                    
-                    viewModel.importItems(parsedItems)
+                    viewModel.loadItems(fromJSON: fileURL)
                 }
                 
             default:
                 Task {
-                    let parsedItems = await viewModel.items(fromTSV: fileURL)
-                    
-                    viewModel.importItems(parsedItems)
+                    viewModel.loadItems(fromTSV: fileURL)
                 }
             }
         }
@@ -180,7 +166,7 @@ extension RegistryView {
             return decodedItems
         }
         
-        func importItems(_ items: [Item]) {
+        private func importItems(_ items: [Item]) {
             guard let manager = DB.shared.manager else { return }
             
             try? manager.updateOrAdd(items: items)
@@ -189,7 +175,7 @@ extension RegistryView {
         }
         
         func loadItems(fromJSON json: URL) {
-            viewModel.isLoading = true
+            isLoading = true
             
             Task {
                 let items = await items(fromJSON: json)
@@ -199,7 +185,7 @@ extension RegistryView {
         }
         
         func loadItems(fromTSV tsv: URL) {
-            viewModel.isLoading = true
+            isLoading = true
             
             Task {
                 let items = await items(fromTSV: tsv)
