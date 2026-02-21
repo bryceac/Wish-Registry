@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @StateObject viewModel = ViewModel()
+    @StateObject var viewModel = ViewModel()
     
     var body: some View {
         NavigationStack {
@@ -114,15 +114,7 @@ struct RegistryView: View {
         }
     }
     
-    func delete(at offsets: IndexSet) {
-        for index in offsets {
-            let item = viewModel.store.sortedItems[index]
-            
-            viewModel.store.sortedItems.remove(at: index)
-            
-            try? DB.shared.manager?.delete(item: item)
-        }
-    }
+    
     
     @ViewBuilder var loadingOverlay: some View {
             
@@ -132,65 +124,6 @@ struct RegistryView: View {
                     
                 ProgressView("loading data...").preferredColorScheme(.dark)
             }
-        }
-    }
-    
-    func retrieveItems() async -> [Item] {
-        guard let manager = DB.shared.manager else { return [] }
-        
-        return manager.items
-    }
-    
-    func loadItems() {
-        if !viewModel.isLoading {
-            isLoading.toggle()
-        }
-        
-        Task {
-            let items = await retrieveItems()
-            viewModel.store = Store(withItems: items)
-            
-            viewModel.isLoading = false
-        }
-    }
-    
-    func items(fromJSON file: URL) async -> [Item] {
-        guard let decodedItems = try? Item.load(from: file) else { return [] }
-        
-        return decodedItems
-    }
-    
-    func items(fromTSV file: URL) async -> [Item] {
-        guard let decodedItems = try? Item.load(fromTSV: file) else { return [] }
-        
-        return decodedItems
-    }
-    
-    func importItems(_ items: [Item]) {
-        guard let manager = DB.shared.manager else { return }
-        
-        try? manager.updateOrAdd(items: items)
-        
-        loadItems()
-    }
-    
-    func loadItems(fromJSON json: URL) {
-        viewModel.isLoading = true
-        
-        Task {
-            let items = await items(fromJSON: json)
-            
-            importItems(items)
-        }
-    }
-    
-    func loadItems(fromTSV tsv: URL) {
-        viewModel.isLoading = true
-        
-        Task {
-            let items = await items(fromTSV: tsv)
-            
-            importItems(items)
         }
     }
 }
@@ -203,6 +136,76 @@ extension RegistryView {
         var isImporting = false
         var exportFormat: UTType? = nil
         var isLoading = false
+        
+        func delete(at offsets: IndexSet) {
+            guard let manager = DB.shared.manager else { return }
+            for index in offsets {
+                let item = store.sortedItems[index]
+                
+                store.sortedItems.remove(at: index)
+                
+                try? manager.delete(item: item)
+            }
+        }
+        
+        func retrieveItems() async -> [Item] {
+            guard let manager = DB.shared.manager else { return [] }
+            
+            return manager.items
+        }
+        
+        func loadItems() {
+            if isLoading {
+                isLoading.toggle()
+            }
+            
+            Task {
+                let items = await retrieveItems()
+                store = Store(withItems: items)
+                
+                isLoading = false
+            }
+        }
+        
+        private func items(fromJSON file: URL) async -> [Item] {
+            guard let decodedItems = try? Item.load(from: file) else { return [] }
+            
+            return decodedItems
+        }
+        
+        private func items(fromTSV file: URL) async -> [Item] {
+            guard let decodedItems = try? Item.load(fromTSV: file) else { return [] }
+            
+            return decodedItems
+        }
+        
+        func importItems(_ items: [Item]) {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.updateOrAdd(items: items)
+            
+            loadItems()
+        }
+        
+        func loadItems(fromJSON json: URL) {
+            viewModel.isLoading = true
+            
+            Task {
+                let items = await items(fromJSON: json)
+                
+                importItems(items)
+            }
+        }
+        
+        func loadItems(fromTSV tsv: URL) {
+            viewModel.isLoading = true
+            
+            Task {
+                let items = await items(fromTSV: tsv)
+                
+                importItems(items)
+            }
+        }
     }
 }
 
