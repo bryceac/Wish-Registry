@@ -10,7 +10,7 @@ import SwiftUI
 struct SelectableNoteView: View {
     @State var note: Note
     var isSelected: Bool
-    var action: (Note) -> ()
+    var action: () -> ()
     
     var body: some View {
         HStack {
@@ -19,7 +19,11 @@ struct SelectableNoteView: View {
                 Spacer()
             }
             
-            NoteView(note: note)
+            Button(action: action) {
+                NoteView(note: note)
+            }
+            
+            
         }
     }
 }
