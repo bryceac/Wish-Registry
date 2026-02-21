@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @StateObject var viewModel = ViewModel()
+    @State var viewModel = ViewModel()
     
     var body: some View {
         NavigationStack {
