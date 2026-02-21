@@ -14,15 +14,13 @@ struct SelectableNoteView: View {
     
     var body: some View {
         HStack {
-            if isSelected {
-                Image(systemName: "checkmark")
-                Spacer()
-            }
-            
             Button(action: action) {
                 NoteView(note: note)
             }
-            
+            if isSelected {
+                Spacer()
+                Image(systemName: "checkmark")
+            }
             
         }
     }
