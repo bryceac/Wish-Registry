@@ -12,16 +12,16 @@ struct NoteDetailView: View {
     
     var body: some View {
         Form {
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: $note.content)
-                
-                if note.content.isEmpty {
-                    VStack {
-                        HStack {
-                            Text("Enter Note Here").foregroundStyle(.tertiary)
-                        }
+            if note.content.isEmpty {
+                VStack {
+                    HStack {
+                        Text("Enter Note Here").foregroundStyle(.tertiary)
                     }
                 }
+            }
+            
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $note.content)
             }.padding()
         }
     }
