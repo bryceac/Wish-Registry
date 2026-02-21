@@ -23,7 +23,7 @@ struct RegistryView: View {
                         } label: {
                             ItemView(item: item)
                         }
-                    }.onDelete(perform: delete)
+                    }.onDelete(perform: viewModel.delete)
                 }.toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Menu("Options") {
@@ -64,17 +64,17 @@ struct RegistryView: View {
             }
         }.onAppear {
             loadItems()
-        }.alert("Save Successful", isPresented: $showSaveSuccess) {
+        }.alert("Save Successful", isPresented: $viewModel.showSaveSuccess) {
             Button("Ok") {
                 viewModel.showSaveSuccess = false
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: items.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: items.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 viewModel.showSaveSuccess = true
             }
-        }.fileImporter(isPresented: $isImporting, allowedContentTypes: [.json, .utf8TabSeparatedText], allowsMultipleSelection: false) { result in
+        }.fileImporter(isPresented: $viewModel.isImporting, allowedContentTypes: [.json, .utf8TabSeparatedText], allowsMultipleSelection: false) { result in
             if case .success = result {
                 if let file = try? result.get().first {
                     
@@ -83,14 +83,14 @@ struct RegistryView: View {
                         Task {
                             let parsedItems = await items(fromJSON: file)
                             
-                            importItems(parsedItems)
+                            viewModel.importItems(parsedItems)
                         }
                         
                     default:
                         Task {
-                            let parsedItems = await items(fromTSV: file)
+                            let parsedItems = await viewModel.items(fromTSV: file)
                             
-                            importItems(parsedItems)
+                            viewModel.importItems(parsedItems)
                         }
                     }
                 }
@@ -99,14 +99,14 @@ struct RegistryView: View {
             switch fileURL.pathExtension {
             case "json":
                 Task {
-                    let parsedItems = await items(fromJSON: fileURL)
+                    let parsedItems = await viewModel.items(fromJSON: fileURL)
                     
                     viewModel.importItems(parsedItems)
                 }
                 
             default:
                 Task {
-                    let parsedItems = await items(fromTSV: fileURL)
+                    let parsedItems = await viewModel.items(fromTSV: fileURL)
                     
                     viewModel.importItems(parsedItems)
                 }
@@ -210,11 +210,5 @@ extension RegistryView {
 }
 
 #Preview {
-    RegistryView(items: Store(withItems: [
-        Item("9F432FA2-12D2-4B61-AA55-319D23601C4E\tNintendo Switch 2\t1\thighest\thttps://example.com/nintendo-switch-2"),
-        Item("15278603-03F1-41E0-81ED-6E94883F9AC7\tMario Kart World\t1\thigh\thttps://example.com/mario-kart-world"),
-        Item("C58232DE-AD35-4188-9736-66BC7CA52E09\tTrails in the Sky the 1st\t1\tmedium\thttps://example.com/trails-in-the-sky")
-    ].compactMap({ item in
-        item
-    })))
+    RegistryView()
 }
