@@ -50,7 +50,7 @@ struct RegistryView: View {
                             
                             try? DB.shared.manager?.add(item: item)
                             
-                            loadItems()
+                            viewModel.loadItems()
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -70,7 +70,7 @@ struct RegistryView: View {
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.sortedItems.elements), contentType: viewModel.exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 viewModel.showSaveSuccess = true
             }
@@ -129,7 +129,8 @@ struct RegistryView: View {
 }
 
 extension RegistryView {
-    @Observable class ViewModel {
+    @Observable
+    class ViewModel {
         var store: Store = Store()
         var showSaveSuccess = false
         var isExporting = false
