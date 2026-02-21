@@ -8,20 +8,21 @@
 import SwiftUI
 
 struct NoteDetailView: View {
+    @FocusState private var editorHasFocus: Bool
+    
     @Binding var note: Note
     
     var body: some View {
         Form {
-            if note.content.isEmpty {
-                VStack {
-                    HStack {
-                        Text("Enter Note Here").foregroundStyle(.tertiary)
+            ZStack(alignment: .topLeading) {
+                if note.content.isEmpty &&  !editorHasFocus {
+                    VStack {
+                        HStack {
+                            Text("Enter Note Here").foregroundStyle(.tertiary)
+                        }
                     }
                 }
-            }
-            
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: $note.content)
+                TextEditor(text: $note.content).focused($editorHasFocus)
             }.padding()
         }
     }
