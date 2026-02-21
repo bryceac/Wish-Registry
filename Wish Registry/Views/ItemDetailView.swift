@@ -64,7 +64,7 @@ struct ItemDetailView: View {
                 List {
                     ForEach(DB.shared.manager!.notes) { note in
                         
-                        SelectableNoteView(note: note, isSelected: item.notes.contains(note.content)) { storedNote in
+                        SelectableNoteView(note: note, isSelected: item.notes.contains(note.content)) {
                             if item.notes.contains(note.content), let noteIndex = item.notes.firstIndex(of: note.content) {
                                 item.notes.remove(at: noteIndex)
                                 
