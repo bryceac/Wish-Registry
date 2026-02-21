@@ -10,34 +10,16 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @State var items: Store = Store()
-    @State var showSaveSuccess = false
-    @State var isExporting = false
-    @State var isImporting = false
-    @State var exportFormat: UTType? = nil
-    @State var isLoading = false
+    @StateObject viewModel = ViewModel()
     
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    ForEach(items.sortedItems) { item in
-                        
-                        var itemBinding: Binding<Item> {
-                            Binding {
-                                return item
-                            } set: { newValue in
-                                guard let storedItemIndex = items.sortedItems.firstIndex(where: {
-                                    $0.id == item.id
-                                }) else { return }
-                                
-                                items.sortedItems[storedItemIndex] = newValue
-                            }
-
-                        }
+                    ForEach(viewModel.store.sortedItems) { item in
                         
                         NavigationLink {
-                            ItemDetailView(item: itemBinding)
+                            ItemDetailView(item: item)
                         } label: {
                             ItemView(item: item)
                         }
@@ -46,19 +28,19 @@ struct RegistryView: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Menu("Options") {
                             Button("Export Items") {
-                                isExporting = true
-                                exportFormat = .json
+                                viewModel.isExporting = true
+                                viewModel.exportFormat = .json
                             }
                             Button("Export Items to TSV") {
-                                isExporting = true
-                                exportFormat = .tsv
+                                viewModel.isExporting = true
+                                viewModel.exportFormat = .tsv
                             }
                             Button("Export Wishlist") {
-                                isExporting = true
-                                exportFormat = .html
+                                viewModel.isExporting = true
+                                viewModel.exportFormat = .html
                             }
                             Button("Import Items") {
-                                isImporting = true
+                                viewModel.isImporting = true
                             }
                         }
                     }
@@ -74,9 +56,9 @@ struct RegistryView: View {
                         }
 
                     }
-                }.onChange(of: items.items) {
-                    if let lastIndex = items.items.indices.last {
-                        proxy.scrollTo(items.items[lastIndex].id)
+                }.onChange(of: viewModel.store.items) {
+                    if let lastIndex = viewModel.store.items.indices.last {
+                        proxy.scrollTo(viewModel.store.items[lastIndex].id)
                     }
                 }
             }
@@ -84,13 +66,13 @@ struct RegistryView: View {
             loadItems()
         }.alert("Save Successful", isPresented: $showSaveSuccess) {
             Button("Ok") {
-                showSaveSuccess = false
+                viewModel.showSaveSuccess = false
             }
         } message: {
             Text("Wishlist Exported Successfully.")
         }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: items.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
-                showSaveSuccess = true
+                viewModel.showSaveSuccess = true
             }
         }.fileImporter(isPresented: $isImporting, allowedContentTypes: [.json, .utf8TabSeparatedText], allowsMultipleSelection: false) { result in
             if case .success = result {
@@ -119,14 +101,14 @@ struct RegistryView: View {
                 Task {
                     let parsedItems = await items(fromJSON: fileURL)
                     
-                    importItems(parsedItems)
+                    viewModel.importItems(parsedItems)
                 }
                 
             default:
                 Task {
                     let parsedItems = await items(fromTSV: fileURL)
                     
-                    importItems(parsedItems)
+                    viewModel.importItems(parsedItems)
                 }
             }
         }
@@ -134,9 +116,9 @@ struct RegistryView: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            let item = items.sortedItems[index]
+            let item = viewModel.store.sortedItems[index]
             
-            items.sortedItems.remove(at: index)
+            viewModel.store.sortedItems.remove(at: index)
             
             try? DB.shared.manager?.delete(item: item)
         }
@@ -144,7 +126,7 @@ struct RegistryView: View {
     
     @ViewBuilder var loadingOverlay: some View {
             
-        if isLoading {
+        if viewModel.isLoading {
             ZStack {
                 Color.black
                     
@@ -160,15 +142,15 @@ struct RegistryView: View {
     }
     
     func loadItems() {
-        if !isLoading {
+        if !viewModel.isLoading {
             isLoading.toggle()
         }
         
         Task {
             let items = await retrieveItems()
-            self.items = Store(withItems: items)
+            viewModel.store = Store(withItems: items)
             
-            isLoading = false
+            viewModel.isLoading = false
         }
     }
     
@@ -193,7 +175,7 @@ struct RegistryView: View {
     }
     
     func loadItems(fromJSON json: URL) {
-        isLoading = true
+        viewModel.isLoading = true
         
         Task {
             let items = await items(fromJSON: json)
@@ -203,13 +185,24 @@ struct RegistryView: View {
     }
     
     func loadItems(fromTSV tsv: URL) {
-        isLoading = true
+        viewModel.isLoading = true
         
         Task {
             let items = await items(fromTSV: tsv)
             
             importItems(items)
         }
+    }
+}
+
+extension RegistryView {
+    @Observable class ViewModel {
+        var store: Store = Store()
+        var showSaveSuccess = false
+        var isExporting = false
+        var isImporting = false
+        var exportFormat: UTType? = nil
+        var isLoading = false
     }
 }
 
