@@ -2,11 +2,53 @@ import Foundation
 
 struct Item: Identifiable {
 	let id: String
-	var name: String
-	var quantity: Int
-	var priority: Priority
-	var url: URL?
-	var notes: [String]
+    var name: String {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.update(item: self)
+        }
+    }
+    var quantity: Int {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.update(item: self)
+        }
+    }
+    var priority: Priority {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.update(item: self)
+        }
+    }
+    var url: URL? {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.update(item: self)
+        }
+    }
+    var notes: [String] {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            for note in notes {
+                if let storedNote = manager.notes.first(where: { n in
+                    n.content == note
+                }) {
+                    try? manager.link(noteWithID: storedNote.id, toItemWithID: self.id)
+                } else {
+                    try? manager.add(note: note)
+                    
+                    guard let recentNote = manager.notes.last else { continue }
+                    
+                    try? manager.link(noteWithID: recentNote.id, toItemWithID: self.id)
+                }
+            }
+        }
+    }
 	
 	init(withID id: String = UUID().uuidString, name: String = "", quantity: Int = 1, priority: Priority = .low, url: URL? = nil, andNotes notes: [String] = []) {
 		self.id = id
