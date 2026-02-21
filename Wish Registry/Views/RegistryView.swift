@@ -63,14 +63,14 @@ struct RegistryView: View {
                 }
             }
         }.onAppear {
-            loadItems()
+            viewModel.loadItems()
         }.alert("Save Successful", isPresented: $viewModel.showSaveSuccess) {
             Button("Ok") {
                 viewModel.showSaveSuccess = false
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: items.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 viewModel.showSaveSuccess = true
             }
@@ -81,7 +81,7 @@ struct RegistryView: View {
                     switch file.pathExtension {
                     case "json":
                         Task {
-                            let parsedItems = await items(fromJSON: file)
+                            let parsedItems = await viewModel.items(fromJSON: file)
                             
                             viewModel.importItems(parsedItems)
                         }
