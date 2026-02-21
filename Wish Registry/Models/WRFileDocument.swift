@@ -137,7 +137,7 @@ extension WRFileDocument: FileDocument {
 
             html += "<html>\r\n"
             html += "\t<head>\r\n"
-            html += "\t\t<title>Wishlist</title>"
+            html += "\t\t<title>Wishlist</title>\r\n"
             html += "\t\t<style>\r\n"
             html += """
                 \t\t\tviewport {
