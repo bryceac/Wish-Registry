@@ -9,7 +9,12 @@ import SwiftUI
 
 struct SelectableNoteView: View {
     @State var note: Note
-    var isSelected: Bool
+    @State var item: Item
+    
+    var isSelected: Bool {
+        return item.notes.contains(note.content)
+    }
+    
     var action: () -> ()
     
     var body: some View {
