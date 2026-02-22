@@ -9,70 +9,44 @@ import SwiftUI
 import Foundation
 
 struct ItemDetailView: View {
-    @Binding var item: Item
-    @State var presentNoteEditor = false
-    @State var revealNotes = false
-    
-    var urlBinding: Binding<String> {
-        Binding {
-            guard let url = item.url else { return "" }
-            
-            return url.absoluteString
-        } set: { newValue in
-            guard let url = URL(string: newValue) else { return }
-            
-            item.url = url
-        }
-
-    }
-    
-    var recentNoteBinding: Binding<Note> {
-        Binding {
-            return DB.shared.manager!.notes.last!
-        } set: { newValue in
-            try? DB.shared.manager!.update(noteWithID: newValue.id, andContent: newValue.content)
-        }
-
-    }
+    @State var viewModel = ViewModel()
     
     var body: some View {
         Form {
-            TextField("Name", text: $item.name).submitLabel(.done)
+            TextField("Name", text: $viewModel.item.name).submitLabel(.done)
             
             HStack {
                 Stepper("Quantity") {
-                    item.quantity += 1
+                    viewModel.item.quantity += 1
                 } onDecrement: {
-                    item.quantity -= 1
+                    viewModel.item.quantity -= 1
                 }
                 
-                Text("\(item.quantity)")
+                Text("\(viewModel.item.quantity)")
 
             }
             
             HStack {
-                Picker("Priority", selection: $item.priority) {
+                Picker("Priority", selection: $viewModel.item.priority) {
                     ForEach(Priority.allCases, id: \.self) { priority in
                         Text(priority.rawValue)
                     }
                 }.pickerStyle(.menu)
             }
             
-            TextField("URL", text: urlBinding).submitLabel(.done)
+            TextField("URL", text: viewModel.urlBinding).submitLabel(.done)
             
-            Section(isExpanded: $revealNotes) {
+            Section(isExpanded: $viewModel.revealNotes) {
                 List {
-                    ForEach(DB.shared.manager!.notes) { note in
+                    ForEach(viewModel.notes) { note in
                         
-                        SelectableNoteView(note: note, item: item) {
-                            if item.notes.contains(note.content), let noteIndex = item.notes.firstIndex(of: note.content) {
-                                item.notes.remove(at: noteIndex)
+                        SelectableNoteView(note: note, item: viewModel.item) {
+                            if viewModel.item.notes.contains(note.content), let noteIndex = viewModel.item.notes.firstIndex(of: note.content) {
+                                viewModel.item.notes.remove(at: noteIndex)
                                 
-                                try? DB.shared.manager!.removeLink(betweenItemWithID: item.id, andNoteWithID: note.id)
+                                try? DB.shared.manager!.removeLink(betweenItemWithID: viewModel.item.id, andNoteWithID: note.id)
                             } else {
-                                item.notes.append(note.content)
-                                
-                                try? DB.shared.manager!.link(noteWithID: note.id, toItemWithID: item.id)
+                                viewModel.item.notes.append(note.content)
                             }
                         }
                     }
@@ -81,29 +55,27 @@ struct ItemDetailView: View {
                 HStack {
                     Text("Notes")
                     Spacer()
-                    if revealNotes {
+                    if viewModel.revealNotes {
                         Button("", systemImage: "plus") {
-                            try? DB.shared.manager?.add(note: "")
+                            viewModel.item.notes.append("")
                             
-                            item.notes.append(DB.shared.manager!.notes.last!.content)
+                            viewModel.presentNoteEditor = true
                             
-                            try? DB.shared.manager?.link(noteWithID: DB.shared.manager!.notes.last!.id, toItemWithID: item.id)
-                            
-                            presentNoteEditor = true
-                            
-                        }.sheet(isPresented: $presentNoteEditor) {
-                            presentNoteEditor = false
+                        }.sheet(isPresented: $viewModel.presentNoteEditor) {
+                            viewModel.presentNoteEditor = false
                         } content: {
-                            NoteDetailView(note: recentNoteBinding)
+                            if let recentNoteIndex = viewModel.notes.indices.last {
+                                NoteDetailView(note: viewModel.recentNoteBinding)
+                            }
                         }
                     }
                     
                     Button {
                         withAnimation {
-                            revealNotes.toggle()
+                            viewModel.revealNotes.toggle()
                         }
                     } label: {
-                        Image(systemName: "chevron.right").rotationEffect(!revealNotes ? Angle(degrees: 90) : Angle(degrees: 270))
+                        Image(systemName: "chevron.right").rotationEffect(!viewModel.revealNotes ? Angle(degrees: 90) : Angle(degrees: 270))
                     }
 
                 }
@@ -113,8 +85,41 @@ struct ItemDetailView: View {
     }
 }
 
+extension ItemDetailView {
+    @Observable
+    class ViewModel {
+        var item: Item!
+        var presentNoteEditor = false
+        var revealNotes = false
+        
+        var urlBinding: Binding<String> {
+            Binding {
+                guard let url = self.item.url else { return "" }
+                
+                return url.absoluteString
+            } set: { newValue in
+                guard let url = URL(string: newValue) else { return }
+                
+                self.item.url = url
+            }
+
+        }
+        
+        var recentNoteBinding: Binding<Note> {
+            Binding {
+                return DB.shared.manager!.notes.last!
+            } set: { newValue in
+                guard let manager = DB.shared.manager, var storedNote = manager.notes.first(where: { note in
+                    note.id == newValue.id
+                }) else { return }
+                
+                storedNote.content = newValue.content
+            }
+
+        }
+    }
+}
+
 #Preview {
-    ItemDetailView(item: .constant(Item(name: "Mario Kart World", andNotes: [
-        "Only if I get the Switch 2"
-    ])))
+    ItemDetailView()
 }
