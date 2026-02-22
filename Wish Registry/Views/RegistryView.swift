@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @State private var store: Store = Store()
+    @State private var store: ItemStore = ItemStore()
     @State private var showSaveSuccess = false
     @State private var isExporting = false
     @State private var isImporting = false
@@ -163,7 +163,7 @@ extension RegistryView {
             
         Task {
             let items = await retrieveItems()
-            store = Store(withItems: items)
+            store = ItemStore(withItems: items)
                 
             isLoading = false
         }

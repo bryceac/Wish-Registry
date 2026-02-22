@@ -8,7 +8,7 @@ import IdentifiedCollections
 import Foundation
 
 @Observable
-class Store {
+class ItemStore {
     var items: IdentifiedArrayOf<Item>
     
     var sortedItems: IdentifiedArrayOf<Item> {
