@@ -21,11 +21,41 @@ class NoteStore {
         return manager.noteLinks
     }
     
-    func addNewNote() {
+    func add(note: String = "") {
         guard let manager = DB.shared.manager else { return }
         
-        try? manager.add(note: "")
+        try? manager.add(note: note)
         
-        notes = IdentifiedArray(uniqueElements: notes)
+        notes = IdentifiedArray(uniqueElements: manager.notes)
+    }
+    
+    func add(notes: [String]) {
+        guard let manager = DB.shared.manager else { return }
+        
+        for note in notes {
+            try? manager.add(note: note)
+        }
+        
+        self.notes = IdentifiedArray(uniqueElements: manager.notes)
+    }
+    
+    func remove(note: Note) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.delete(noteWithID: note.id)
+        
+        notes = IdentifiedArray(uniqueElements: manager.notes)
+    }
+    
+    func link(note: Note, toItemWithID itemID: String) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.link(noteWithID: note.id, toItemWithID: itemID)
+    }
+    
+    func unlink(note: Note, froItemWithID itemID: String) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.removeLink(betweenItemWithID: itemID, andNoteWithID: note.id)
     }
 }
