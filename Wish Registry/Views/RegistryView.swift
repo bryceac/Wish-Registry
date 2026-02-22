@@ -130,7 +130,6 @@ extension RegistryView {
     }
         
     func delete(at offsets: IndexSet) {
-        guard let manager = DB.shared.manager else { return }
         for index in offsets {
             let item = store.sortedItems[index]
                 
