@@ -10,74 +10,79 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @State var viewModel = ViewModel()
+    @State private var store: Store = Store()
+    @State private var showSaveSuccess = false
+    @State private var isExporting = false
+    @State private var isImporting = false
+    @State private var exportFormat: UTType? = nil
+    @State private var isLoading = false
     
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    ForEach(viewModel.store.sortedItems.indices, id: \.self) { index in
+                    ForEach(store.sortedItems.indices, id: \.self) { index in
                         NavigationLink {
-                            ItemDetailView(item: $viewModel.store.sortedItems[index])
+                            ItemDetailView(item: $store.sortedItems[index])
                         } label: {
-                            ItemView(item: viewModel.store.sortedItems[index])
+                            ItemView(item: store.sortedItems[index])
                         }
-                    }.onDelete(perform: viewModel.delete)
+                    }.onDelete(perform: delete)
                 }.toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Menu("Options") {
                             Button("Export Items") {
-                                viewModel.isExporting = true
-                                viewModel.exportFormat = .json
+                                isExporting = true
+                                exportFormat = .json
                             }
                             Button("Export Items to TSV") {
-                                viewModel.isExporting = true
-                                viewModel.exportFormat = .tsv
+                                isExporting = true
+                                exportFormat = .tsv
                             }
                             Button("Export Wishlist") {
-                                viewModel.isExporting = true
-                                viewModel.exportFormat = .html
+                                isExporting = true
+                                exportFormat = .html
                             }
                             Button("Import Items") {
-                                viewModel.isImporting = true
+                                isImporting = true
                             }
                         }
                     }
                     ToolbarItem(placement: .primaryAction) {
                         Button {
-                            viewModel.addNewItem()
+                            addNewItem()
                         } label: {
                             Image(systemName: "plus")
                         }
 
                     }
-                }.onChange(of: viewModel.store.items) {
-                    if let lastIndex = viewModel.store.items.indices.last {
-                        proxy.scrollTo(viewModel.store.items[lastIndex].id)
+                }.onChange(of: store.items) {
+                    if let lastIndex = store.items.indices.last {
+                        proxy.scrollTo(store.items[lastIndex].id)
                     }
                 }
             }
         }.onAppear {
-            viewModel.loadItems()
-        }.alert("Save Successful", isPresented: $viewModel.showSaveSuccess) {
+            loadItems()
+        }.alert("Save Successful", isPresented: $showSaveSuccess) {
             Button("Ok") {
-                viewModel.showSaveSuccess = false
+                showSaveSuccess = false
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $viewModel.isExporting, document: WRFileDocument(items: viewModel.store.sortedItems.elements), contentType: viewModel.exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: store.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
-                viewModel.showSaveSuccess = true
+                showSaveSuccess = true
             }
-        }.fileImporter(isPresented: $viewModel.isImporting, allowedContentTypes: [.json, .utf8TabSeparatedText], allowsMultipleSelection: false) { result in
+        }.fileImporter(isPresented: $isImporting, allowedContentTypes: [.json, .utf8TabSeparatedText], allowsMultipleSelection: false) { result in
             if case .success = result {
                 if let file = try? result.get().first {
                     
                     switch file.pathExtension {
                     case "json":
-                        viewModel.loadItems(fromJSON: file)
+                        loadItems(fromJSON: file)
                     default:
-                        viewModel.loadItems(fromTSV: file)
+                        loadItems(fromTSV: file)
                     }
                 }
             }
@@ -85,12 +90,12 @@ struct RegistryView: View {
             switch fileURL.pathExtension {
             case "json":
                 Task {
-                    viewModel.loadItems(fromJSON: fileURL)
+                    loadItems(fromJSON: fileURL)
                 }
                 
             default:
                 Task {
-                    viewModel.loadItems(fromTSV: fileURL)
+                    loadItems(fromTSV: fileURL)
                 }
             }
         }
@@ -98,7 +103,7 @@ struct RegistryView: View {
     
     @ViewBuilder var loadingOverlay: some View {
             
-        if viewModel.isLoading {
+        if isLoading {
             ZStack {
                 Color.black
                     
@@ -109,91 +114,81 @@ struct RegistryView: View {
 }
 
 extension RegistryView {
-    @Observable
-    class ViewModel {
-        var store: Store = Store()
-        var showSaveSuccess = false
-        var isExporting = false
-        var isImporting = false
-        var exportFormat: UTType? = nil
-        var isLoading = false
-        
-        func addNewItem() {
-            guard let manager = DB.shared.manager else { return }
+    func addNewItem() {
+        guard let manager = DB.shared.manager else { return }
             
-            try? manager.add(item: Item())
+        try? manager.add(item: Item())
             
-            loadItems()
-        }
+        loadItems()
+    }
         
-        func delete(at offsets: IndexSet) {
-            guard let manager = DB.shared.manager else { return }
-            for index in offsets {
-                let item = store.sortedItems[index]
+    func delete(at offsets: IndexSet) {
+        guard let manager = DB.shared.manager else { return }
+        for index in offsets {
+            let item = store.sortedItems[index]
                 
-                store.sortedItems.remove(at: index)
+            store.sortedItems.remove(at: index)
                 
-                try? manager.delete(item: item)
-            }
+            try? manager.delete(item: item)
         }
+    }
         
-        func retrieveItems() async -> [Item] {
+    func retrieveItems() async -> [Item] {
             guard let manager = DB.shared.manager else { return [] }
             
             return manager.items
         }
         
-        func loadItems() {
-            if isLoading {
-                isLoading.toggle()
-            }
+    func loadItems() {
+        if isLoading {
+            isLoading.toggle()
+        }
             
-            Task {
-                let items = await retrieveItems()
-                store = Store(withItems: items)
+        Task {
+            let items = await retrieveItems()
+            store = Store(withItems: items)
                 
-                isLoading = false
-            }
+            isLoading = false
         }
+    }
         
-        private func items(fromJSON file: URL) async -> [Item] {
-            guard let decodedItems = try? Item.load(from: file) else { return [] }
+    private func items(fromJSON file: URL) async -> [Item] {
+        guard let decodedItems = try? Item.load(from: file) else { return [] }
             
-            return decodedItems
-        }
+        return decodedItems
+    }
         
-        private func items(fromTSV file: URL) async -> [Item] {
-            guard let decodedItems = try? Item.load(fromTSV: file) else { return [] }
+    private func items(fromTSV file: URL) async -> [Item] {
+        guard let decodedItems = try? Item.load(fromTSV: file) else { return [] }
             
-            return decodedItems
-        }
+        return decodedItems
+    }
         
-        private func importItems(_ items: [Item]) {
-            guard let manager = DB.shared.manager else { return }
+    private func importItems(_ items: [Item]) {
+        guard let manager = DB.shared.manager else { return }
             
-            try? manager.updateOrAdd(items: items)
+        try? manager.updateOrAdd(items: items)
             
-            loadItems()
-        }
+        loadItems()
+    }
         
-        func loadItems(fromJSON json: URL) {
-            isLoading = true
+    func loadItems(fromJSON json: URL) {
+        isLoading = true
             
-            Task {
-                let items = await items(fromJSON: json)
+        Task {
+            let items = await items(fromJSON: json)
                 
-                importItems(items)
-            }
+            importItems(items)
         }
+    }
         
-        func loadItems(fromTSV tsv: URL) {
-            isLoading = true
+    func loadItems(fromTSV tsv: URL) {
+        isLoading = true
             
-            Task {
-                let items = await items(fromTSV: tsv)
+        Task {
+            let items = await items(fromTSV: tsv)
                 
-                importItems(items)
-            }
+            importItems(items)
         }
     }
 }
