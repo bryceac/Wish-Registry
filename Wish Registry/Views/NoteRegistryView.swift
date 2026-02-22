@@ -19,9 +19,8 @@ struct NoteRegistryView: View {
                         Binding {
                             return note
                         } set: { newValue in
-                            note.content = newValue.content
+                            store.update(note: newValue)
                         }
-
                     }
                     
                     NavigationLink(destination: NoteDetailView(note: NoteBinding)) {
