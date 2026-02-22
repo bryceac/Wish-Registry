@@ -1,6 +1,7 @@
 import Foundation
 
-struct Item: Identifiable {
+@Observable
+class Item: Identifiable, Codable, LosslessStringConvertible {
 	let id: String
     var name: String {
         didSet {
@@ -58,46 +59,56 @@ struct Item: Identifiable {
 		self.url = url
 		self.notes = notes
 	}
-}
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, name, quantity, priority, url, notes
+    }
 
-extension Item: Codable {
-	private enum CodingKeys: String, CodingKey {
-		case id, name, quantity, priority, url, notes
-	}
-
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-		
-		try container.encode(self.id, forKey: .id)
-		try container.encode(self.name, forKey: .name)
-		
-		if self.quantity > 1 {
-			try container.encode(self.quantity, forKey: .quantity)
-		}
-		
-		if case Priority.low = self.priority {} else {
-			try container.encode(self.priority, forKey: .priority)
-		}
-		
-		if case .none = self.url {} else {
-			try container.encode(self.url, forKey: .url)
-		}
-		
-		if !self.notes.isEmpty {
-			try container.encode(self.notes, forKey: .notes)
-		}
-	}
-	
-	init(from decoder: Decoder) throws {
-		let container = try decoder.container(keyedBy: CodingKeys.self)
-		
-		self.id = container.contains(.id) ? try container.decode(String.self, forKey: .id) : UUID().uuidString
-		self.name = try container.decode(String.self, forKey: .name)
-		self.quantity = container.contains(.quantity) ? try container.decode(Int.self, forKey: .quantity) : 1
-		self.priority = container.contains(.priority) ? try container.decode(Priority.self, forKey: .priority) : Priority.low
-		self.url = container.contains(.url) ? try container.decode(URL.self, forKey: .url) : nil
-		self.notes = container.contains(.notes) ? try container.decode([String].self, forKey: .notes) : []
-	}
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.name, forKey: .name)
+        
+        if self.quantity > 1 {
+            try container.encode(self.quantity, forKey: .quantity)
+        }
+        
+        if case Priority.low = self.priority {} else {
+            try container.encode(self.priority, forKey: .priority)
+        }
+        
+        if case .none = self.url {} else {
+            try container.encode(self.url, forKey: .url)
+        }
+        
+        if !self.notes.isEmpty {
+            try container.encode(self.notes, forKey: .notes)
+        }
+    }
+    
+    required convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.init(withID: container.contains(.id) ? try container.decode(String.self, forKey: .id) : UUID().uuidString,
+        name: try container.decode(String.self, forKey: .name),
+        quantity: container.contains(.quantity) ? try container.decode(Int.self, forKey: .quantity) : 1,
+        priority: container.contains(.priority) ? try container.decode(Priority.self, forKey: .priority) : Priority.low,
+                  url: container.contains(.url) ? try container.decode(URL.self, forKey: .url) : nil,
+        andNotes: container.contains(.notes) ? try container.decode([String].self, forKey: .notes) : [])
+    }
+    
+    required convenience init?(_ description: String) {
+        let fields = description.components(separatedBy: "\t")
+        
+        guard fields.count == 5 else { return nil }
+        
+        self.init(withID: !fields[0].isEmpty ? fields[0] : UUID().uuidString,
+                  name: fields[1],
+        quantity: !fields[2].isEmpty ? Int(fields[2]) ?? 1 : 1,
+                  priority: !fields[3].isEmpty ? Priority(rawValue: fields[3]) ?? Priority.low : Priority.low,
+                  url: !fields[4].isEmpty ? URL(string: fields[4]) : nil)
+    }
 }
 
 extension Item: CustomStringConvertible {
@@ -107,21 +118,6 @@ extension Item: CustomStringConvertible {
 		} else {
 			return "\t\(self.id)\t\(self.name)\t\(self.quantity)\t\(self.priority)\t"
 		}
-	}
-}
-
-extension Item: LosslessStringConvertible {
-	init?(_ description: String) {
-		let fields = description.components(separatedBy: "\t")
-		
-		guard fields.count == 5 else { return nil } 
-		
-		self.id = !fields[0].isEmpty ? fields[0] : UUID().uuidString
-		self.name = fields[1]
-		self.quantity = !fields[2].isEmpty ? Int(fields[2]) ?? 1 : 1
-		self.priority = !fields[3].isEmpty ? Priority(rawValue: fields[3]) ?? Priority.low : Priority.low
-		self.url = !fields[4].isEmpty ? URL(string: fields[4]) : nil
-		self.notes = []
 	}
 }
 
@@ -148,7 +144,7 @@ extension Item {
 }
 
 extension Item: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.id.caseInsensitiveCompare(rhs.id) == .orderedSame &&
         lhs.name == rhs.name &&
         lhs.quantity == rhs.quantity &&
