@@ -27,15 +27,7 @@ struct RegistryView: View {
                             Binding {
                                 return item
                             } set: { newValue in
-                                (item.name,
-                                 item.quantity,
-                                 item.priority,
-                                 item.url,
-                                 item.notes) = (newValue.name,
-                                                newValue.quantity,
-                                                newValue.priority,
-                                                newValue.url,
-                                                newValue.notes)
+                                store.update(item: newValue)
                             }
 
                         }

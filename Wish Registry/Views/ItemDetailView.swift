@@ -9,7 +9,6 @@ import SwiftUI
 import Foundation
 
 struct ItemDetailView: View {
-    @Environment(ItemStore.self) private var itemStore
     @Environment(NoteStore.self) private var noteStore
     @Binding var item: Item
     @State private var presentNoteEditor = false
