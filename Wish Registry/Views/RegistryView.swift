@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @State private var store: ItemStore = ItemStore()
+    @Environment(ItemStore.self) private var store
     @State private var showSaveSuccess = false
     @State private var isExporting = false
     @State private var isImporting = false
@@ -79,8 +79,6 @@ struct RegistryView: View {
                     }
                 }
             }
-        }.onAppear {
-            loadItems()
         }.alert("Save Successful", isPresented: $showSaveSuccess) {
             Button("Ok") {
                 showSaveSuccess = false
@@ -144,29 +142,18 @@ extension RegistryView {
         for index in offsets {
             let item = store.sortedItems[index]
                 
-            store.sortedItems.remove(at: index)
-                
-            try? manager.delete(item: item)
+            store.remove(item: item)
         }
     }
-        
-    func retrieveItems() async -> [Item] {
-            guard let manager = DB.shared.manager else { return [] }
-            
-            return manager.items
-        }
         
     func loadItems() {
         if isLoading {
             isLoading.toggle()
         }
             
-        Task {
-            let items = await retrieveItems()
-            store = ItemStore(withItems: items)
-                
-            isLoading = false
-        }
+        store.reload()
+        
+        isLoading = false
     }
         
     private func items(fromJSON file: URL) async -> [Item] {
@@ -182,9 +169,7 @@ extension RegistryView {
     }
         
     private func importItems(_ items: [Item]) {
-        guard let manager = DB.shared.manager else { return }
-            
-        try? manager.updateOrAdd(items: items)
+        store.add(items: items)
             
         loadItems()
     }
