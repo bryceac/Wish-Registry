@@ -55,6 +55,14 @@ class NoteStore {
         notes = IdentifiedArray(uniqueElements: manager.notes)
     }
     
+    func update(note: Note) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.update(noteWithID: note.id, andContent: note.content)
+        
+        notes = IdentifiedArray(uniqueElements: manager.notes)
+    }
+    
     func link(note: Note, toItemWithID itemID: String) {
         guard let manager = DB.shared.manager else { return }
         
