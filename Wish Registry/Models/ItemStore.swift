@@ -9,7 +9,13 @@ import Foundation
 
 @Observable
 class ItemStore {
-    var items: IdentifiedArrayOf<Item>
+    var items: IdentifiedArrayOf<Item> {
+        didSet {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.updateOrAdd(items: items)
+        }
+    }
     
     var sortedItems: IdentifiedArrayOf<Item> {
         get {
@@ -29,5 +35,9 @@ class ItemStore {
     
     init(withItems items: [Item] = []) {
         self.items = IdentifiedArray(uniqueElements: items)
+    }
+    
+    func add(item: Item = Item()) {
+        items.append(item)
     }
 }
