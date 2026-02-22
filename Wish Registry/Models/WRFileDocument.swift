@@ -76,7 +76,7 @@ extension WRFileDocument: FileDocument {
     func noteList() -> String {
         let notes = uniqueNotes()
 
-        var noteString = "\t\t\t\t<ol>\r\n"
+        var noteString = "\t\t\t\t<ol id=\"notes\">\r\n"
 
         for (position, note) in notes.enumerated() {
             let idNumber = position+1;
@@ -127,7 +127,7 @@ extension WRFileDocument: FileDocument {
             itemString += "\t\t\t\t<li>\(registry(item: item))</li>\r\n"
         }
 
-        itemString += "\t\t\t</ol>\r\n"
+        itemString += "\t\t\t</ol id=\"registry\">\r\n"
 
         return itemString
     }
