@@ -146,7 +146,10 @@ extension WRFileDocument: FileDocument {
                 \t\t\t}
                 \t\t\t@media screen and (max-width:980px) {
                 \t\t\tbody {
-                \t\t\t\tfont-size:2em:1.0;
+                \t\t\t\tfont-size:2em;;
+                \t\t\t}
+                \t\t\t#registry li {
+                \t\t\t\tmargin-bottom:20px;
                 \t\t\t}
                 \t\t\t}\r\n
                 """
