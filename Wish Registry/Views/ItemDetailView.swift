@@ -88,7 +88,7 @@ struct ItemDetailView: View {
 extension ItemDetailView {
     var urlBinding: Binding<String> {
         Binding {
-            guard let url = self.item.url else { return "" }
+            guard let url = item.url else { return "" }
                 
             return url.absoluteString
         } set: { newValue in
