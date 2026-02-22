@@ -22,6 +22,12 @@ class DBManager {
         return items
     }
     
+    var NoteLinks: [String: [Int]] {
+        guard let links = try? retrieveItemNoteLinks() else { return [:] }
+        
+        return links
+    }
+    
     // Tables
     let itemTable = Table("items")
     let notesTable = Table("notes")
