@@ -102,7 +102,7 @@ extension ItemDetailView {
         Binding {
             return DB.shared.manager!.notes.last!
         } set: { newValue in
-            guard let manager = DB.shared.manager, var storedNote = manager.notes.last else { return }
+            guard let manager = DB.shared.manager, let storedNote = manager.notes.last else { return }
                 
             storedNote.content = newValue.content
         }
