@@ -43,7 +43,7 @@ struct ItemDetailView: View {
                 List {
                     ForEach(noteStore.notes) { note in
                         
-                        SelectableNoteView(note: note, item: item) {
+                        SelectableNoteView(note: note, itemID: item.id) {
                             if let noteIDs = noteStore.noteLinks[item.id],  noteIDs.contains(note.id), let noteIndex = item.notes.firstIndex(of: note.content) {
                                 item.notes.remove(at: noteIndex)
                                 noteStore.unlink(note: note, froItemWithID: item.id)
