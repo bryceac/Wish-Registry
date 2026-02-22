@@ -9,13 +9,7 @@ import Foundation
 @Observable
 class Note: Identifiable {
     let id: Int
-    var content: String {
-        didSet {
-            guard let manager = DB.shared.manager else { return }
-            
-            try? manager.update(noteWithID: self.id, andContent: content)
-        }
-    }
+    var content: String
     
     init(id: Int, content: String) {
         self.id = id
