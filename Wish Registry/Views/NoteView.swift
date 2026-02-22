@@ -10,6 +10,6 @@ struct NoteView: View {
     @State var note: Note
     
     var body: some View {
-        Text(note.content.components(separatedBy: .newlines).first!)
+        Text(note.content.isEmpty ? "New Note" : note.content.components(separatedBy: .newlines).first!)
     }
 }

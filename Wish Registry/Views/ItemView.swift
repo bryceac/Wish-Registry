@@ -12,7 +12,7 @@ struct ItemView: View {
     
     var body: some View {
         HStack {
-            Text(item.name)
+            Text(item.name.isEmpty ? "New Item" : item.name)
             Spacer()
             if item.quantity > 1 {
                 Text("x\(item.quantity)")
