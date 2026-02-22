@@ -9,7 +9,7 @@ import Foundation
 
 @Observable
 class NoteStore {
-    var notes: IdentifiedArrayOf<Note>
+    var notes: IdentifiedArrayOf<Note> = []
     
     var latestNote: Note? {
         return notes.last
@@ -21,7 +21,11 @@ class NoteStore {
         return manager.noteLinks
     }
     
-    init(withNotes notes: [Note] = []) {
-        self.notes = IdentifiedArray(uniqueElements: notes)
+    func addNewNote() {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.add(note: "")
+        
+        notes = IdentifiedArray(uniqueElements: notes)
     }
 }
