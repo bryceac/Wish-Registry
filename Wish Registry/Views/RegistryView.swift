@@ -59,7 +59,7 @@ struct RegistryView: View {
             }
         }.onAppear {
             viewModel.loadItems()
-        }/*.alert("Save Successful", isPresented: $viewModel.showSaveSuccess) {
+        }.alert("Save Successful", isPresented: $viewModel.showSaveSuccess) {
             Button("Ok") {
                 viewModel.showSaveSuccess = false
             }
@@ -93,7 +93,7 @@ struct RegistryView: View {
                     viewModel.loadItems(fromTSV: fileURL)
                 }
             }
-        } */
+        }
     }
     
     @ViewBuilder var loadingOverlay: some View {
