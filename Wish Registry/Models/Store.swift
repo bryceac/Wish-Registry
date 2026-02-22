@@ -5,6 +5,7 @@
 //  Created by Bryce Campbell on 2/20/26.
 //
 import IdentifiedCollections
+import Foundation
 
 @Observable
 class Store {
