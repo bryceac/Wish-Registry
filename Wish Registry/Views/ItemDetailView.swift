@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 
 struct ItemDetailView: View {
+    @Environment(ItemStore.self) private var itemStre
+    @Environment(NoteStore.self) private var noteStore
     @Binding var item: Item
     @State private var presentNoteEditor = false
     @State private var revealNotes = false
@@ -40,15 +42,13 @@ struct ItemDetailView: View {
             
             Section(isExpanded: $revealNotes) {
                 List {
-                    ForEach(DB.shared.manager!.notes) { note in
+                    ForEach(noteStore.notes) { note in
                         
                         SelectableNoteView(note: note, item: item) {
-                            if item.notes.contains(note.content), let noteIndex = item.notes.firstIndex(of: note.content) {
-                                item.notes.remove(at: noteIndex)
-                                
-                                try? DB.shared.manager!.removeLink(betweenItemWithID: item.id, andNoteWithID: note.id)
+                            if let noteIDs = noteStore.noteLinks[item.id],  noteIDs.contains(note.id) {
+                                noteStore.unlink(note: note, froItemWithID: item.id)
                             } else {
-                                item.notes.append(note.content)
+                                noteStore.link(note: note, toItemWithID: item.id)
                             }
                         }
                     }
