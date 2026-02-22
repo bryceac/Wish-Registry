@@ -4,8 +4,10 @@
 //
 //  Created by Bryce Campbell on 2/14/26.
 //
+import Foundation
 
-struct Note: Identifiable {
+@Observable
+class Note: Identifiable {
     let id: Int
     var content: String {
         didSet {
@@ -13,5 +15,10 @@ struct Note: Identifiable {
             
             try? manager.update(noteWithID: self.id, andContent: content)
         }
+    }
+    
+    init(id: Int, content: String) {
+        self.id = id
+        self.content = content
     }
 }
