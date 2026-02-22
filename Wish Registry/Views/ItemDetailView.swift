@@ -111,5 +111,5 @@ extension ItemDetailView {
 }
 
 #Preview {
-    ItemDetailView()
+    ItemDetailView(item: .constant(Item("\tNintendo Switch 2\t1\thighest\t")!))
 }
