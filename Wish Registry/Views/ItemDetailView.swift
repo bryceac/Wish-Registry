@@ -38,7 +38,7 @@ struct ItemDetailView: View {
             
             Section(isExpanded: $viewModel.revealNotes) {
                 List {
-                    ForEach(viewModel.notes) { note in
+                    ForEach(DB.shared.manager!.notes) { note in
                         
                         SelectableNoteView(note: note, item: viewModel.item) {
                             if viewModel.item.notes.contains(note.content), let noteIndex = viewModel.item.notes.firstIndex(of: note.content) {
@@ -64,9 +64,7 @@ struct ItemDetailView: View {
                         }.sheet(isPresented: $viewModel.presentNoteEditor) {
                             viewModel.presentNoteEditor = false
                         } content: {
-                            if let recentNoteIndex = viewModel.notes.indices.last {
-                                NoteDetailView(note: viewModel.recentNoteBinding)
-                            }
+                            NoteDetailView(note: viewModel.recentNoteBinding)
                         }
                     }
                     
@@ -109,9 +107,7 @@ extension ItemDetailView {
             Binding {
                 return DB.shared.manager!.notes.last!
             } set: { newValue in
-                guard let manager = DB.shared.manager, var storedNote = manager.notes.first(where: { note in
-                    note.id == newValue.id
-                }) else { return }
+                guard let manager = DB.shared.manager, var storedNote = manager.notes.last else { return }
                 
                 storedNote.content = newValue.content
             }
