@@ -20,7 +20,7 @@ class ItemStore {
     func add(item: Item = Item()) {
         guard let manager = DB.shared.manager else { return }
         
-        try? manager.add(item: item)
+        try? manager.updateOrAdd(item: item)
         
         items = IdentifiedArray(uniqueElements: manager.items)
     }
