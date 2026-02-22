@@ -60,7 +60,11 @@ struct ItemDetailView: View {
                     Spacer()
                     if revealNotes {
                         Button("", systemImage: "plus") {
-                            item.notes.append("")
+                            let note = ""
+                            
+                            item.notes.append(note)
+                            noteStore.add(note: note)
+                            noteStore.link(note: noteStore.latestNote!, toItemWithID: item.id)
                             
                             presentNoteEditor = true
                             
@@ -101,11 +105,9 @@ extension ItemDetailView {
         
     var recentNoteBinding: Binding<Note> {
         Binding {
-            return DB.shared.manager!.notes.last!
+            return noteStore.latestNote!
         } set: { newValue in
-            guard let manager = DB.shared.manager, let storedNote = manager.notes.last else { return }
-                
-            storedNote.content = newValue.content
+            noteStore.update(note: newValue)
         }
 
     }

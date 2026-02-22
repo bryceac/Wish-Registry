@@ -29,12 +29,18 @@ class NoteStore {
         }
     }
     
+    func reload() {
+        guard let manager = DB.shared.manager else { return }
+        
+        notes = IdentifiedArray(uniqueElements: manager.notes)
+    }
+    
     func add(note: String = "") {
         guard let manager = DB.shared.manager else { return }
         
         try? manager.add(note: note)
         
-        notes = IdentifiedArray(uniqueElements: manager.notes)
+        reload()
     }
     
     func add(notes: [String]) {
@@ -44,7 +50,7 @@ class NoteStore {
             try? manager.add(note: note)
         }
         
-        self.notes = IdentifiedArray(uniqueElements: manager.notes)
+        reload()
     }
     
     func remove(note: Note) {
@@ -52,7 +58,7 @@ class NoteStore {
         
         try? manager.delete(noteWithID: note.id)
         
-        notes = IdentifiedArray(uniqueElements: manager.notes)
+        reload()
     }
     
     func update(note: Note) {
@@ -60,7 +66,7 @@ class NoteStore {
         
         try? manager.update(noteWithID: note.id, andContent: note.content)
         
-        notes = IdentifiedArray(uniqueElements: manager.notes)
+        reload()
     }
     
     func link(note: Note, toItemWithID itemID: String) {
