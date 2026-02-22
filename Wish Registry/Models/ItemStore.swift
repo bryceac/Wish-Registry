@@ -24,4 +24,28 @@ class ItemStore {
         
         items = IdentifiedArray(uniqueElements: manager.items)
     }
+    
+    func add(items: [Item]) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.updateOrAdd(items: items)
+        
+        self.items = IdentifiedArray(uniqueElements: manager.items)
+    }
+    
+    func remove(item: Item) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.delete(item: item)
+        
+        items = IdentifiedArray(uniqueElements: manager.items)
+    }
+    
+    func update(item: Item) {
+        guard let manager = DB.shared.manager else { return }
+        
+        try? manager.update(item: item)
+        
+        items = IdentifiedArray(uniqueElements: manager.items)
+    }
 }
