@@ -28,6 +28,7 @@ struct RegistryView: View {
                                 return item
                             } set: { newValue in
                                 store.update(item: newValue)
+                                loadItems()
                             }
 
                         }
