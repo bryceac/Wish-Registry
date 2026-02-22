@@ -156,20 +156,20 @@ extension WRFileDocument: FileDocument {
             html += "\t\t</style>\r\n"
             html += "\t</head>\r\n"
             html += "\t<body>\r\n"
-            html += "\t\t<article>"
-            html += "\t\t\t<header>"
-            html += "\t\t\t\t<h1>Wishlist</h1>"
-            html += "\t\t\t\t<hr>"
-            html += "\t\t\t</header>"
+            html += "\t\t<article>\r\n"
+            html += "\t\t\t<header>\r\n"
+            html += "\t\t\t\t<h1>Wishlist</h1>\r\n"
+            html += "\t\t\t\t<hr>\r\n"
+            html += "\t\t\t</header>\r\n"
             html += registry()
             if !uniqueNotes().isEmpty {
-                html += "\t\t\t<footer>"
-                html += "\t\t\t\t<h2>Notes</h2>"
-                html += "\t\t\t\t<hr>"
+                html += "\t\t\t<footer>\r\n"
+                html += "\t\t\t\t<h2>Notes</h2>\r\n"
+                html += "\t\t\t\t<hr>\r\n"
                 html += noteList()
-                html += "\t\t\t</footer>"
+                html += "\t\t\t</footer>\r\n"
             }
-            html += "\t\t</article>"
+            html += "\t\t</article>\r\n"
             html += "\t</body>\r\n"
             html += "</html>"
         
