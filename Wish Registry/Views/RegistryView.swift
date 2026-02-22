@@ -45,11 +45,7 @@ struct RegistryView: View {
                     }
                     ToolbarItem(placement: .primaryAction) {
                         Button {
-                            let item = Item()
-                            
-                            try? DB.shared.manager?.add(item: item)
-                            
-                            viewModel.loadItems()
+                            viewModel.addNewItem()
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -100,8 +96,6 @@ struct RegistryView: View {
         }
     }
     
-    
-    
     @ViewBuilder var loadingOverlay: some View {
             
         if viewModel.isLoading {
@@ -123,6 +117,14 @@ extension RegistryView {
         var isImporting = false
         var exportFormat: UTType? = nil
         var isLoading = false
+        
+        func addNewItem() {
+            guard let manager = DB.shared.manager else { return }
+            
+            try? manager.add(item: Item())
+            
+            loadItems()
+        }
         
         func delete(at offsets: IndexSet) {
             guard let manager = DB.shared.manager else { return }
