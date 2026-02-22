@@ -15,6 +15,12 @@ class NoteStore {
         return notes.last
     }
     
+    var noteLinks: [String: [Int]] {
+        guard let manager = DB.shared.manager else { return [:] }
+        
+        return manager.noteLinks
+    }
+    
     init(withNotes notes: [Note] = []) {
         self.notes = IdentifiedArray(uniqueElements: notes)
     }

@@ -22,7 +22,7 @@ class DBManager {
         return items
     }
     
-    var NoteLinks: [String: [Int]] {
+    var noteLinks: [String: [Int]] {
         guard let links = try? retrieveItemNoteLinks() else { return [:] }
         
         return links
