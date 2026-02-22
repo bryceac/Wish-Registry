@@ -9,12 +9,20 @@ import Foundation
 
 @Observable
 class ItemStore {
-    var items: IdentifiedArrayOf<Item> = []
+    var items: IdentifiedArrayOf<Item>
     
     var sortedItems: IdentifiedArrayOf<Item> {
         IdentifiedArray(uniqueElements: items.sorted { firstItem, secondItem in
                 firstItem.priority > secondItem.priority
         })
+    }
+    
+    init() {
+        if let manager = DB.shared.manager {
+            items = IdentifiedArray(uniqueElements: manager.items)
+        } else {
+            items = []
+        }
     }
     
     func add(item: Item = Item()) {
