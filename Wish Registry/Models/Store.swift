@@ -6,7 +6,8 @@
 //
 import IdentifiedCollections
 
-struct Store {
+@Observable
+class Store {
     var items: IdentifiedArrayOf<Item>
     
     var sortedItems: IdentifiedArrayOf<Item> {
