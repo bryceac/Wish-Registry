@@ -119,7 +119,7 @@ class DBManager {
         var items: [Item] = []
         
         for row in try db.prepare(itemTable) {
-            let item = Item(withID: row[itemID], name: row[itemName], quantity: row[itemQuantity], priority: Priority(rawValue: row[itemPriority]) ?? .low, url: .none ~= row[itemURL] ? nil : URL(string: row[itemURL]!))
+            var item = Item(withID: row[itemID], name: row[itemName], quantity: row[itemQuantity], priority: Priority(rawValue: row[itemPriority]) ?? .low, url: .none ~= row[itemURL] ? nil : URL(string: row[itemURL]!))
             
             item.notes = try retrieveNotes(forItemWithID: item.id)
             
