@@ -12,10 +12,19 @@ struct NoteRegistryView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(notes.indices, id: \.self) { index in
+                ForEach(notes) { note in
                     
-                    NavigationLink(destination: NoteDetailView(note: $notes[index])) {
-                        NoteView(note: notes[index])
+                    var NoteBinding: Binding<Note> {
+                        Binding {
+                            return note
+                        } set: { newValue in
+                            note.content = newValue.content
+                        }
+
+                    }
+                    
+                    NavigationLink(destination: NoteDetailView(note: NoteBinding)) {
+                        NoteView(note: note)
                     }
                 }.onDelete(perform: delete)
             }.onAppear {
