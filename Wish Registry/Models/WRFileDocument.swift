@@ -121,13 +121,13 @@ extension WRFileDocument: FileDocument {
     }
     
     func registry() -> String {
-        var itemString = "\t\t\t<ol>\r\n"
+        var itemString = "\t\t\t<ol id=\"registry\">\r\n"
 
         for item in sortedItems {
             itemString += "\t\t\t\t<li>\(registry(item: item))</li>\r\n"
         }
 
-        itemString += "\t\t\t</ol id=\"registry\">\r\n"
+        itemString += "\t\t\t</ol>\r\n"
 
         return itemString
     }
