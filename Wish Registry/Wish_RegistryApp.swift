@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct Wish_RegistryApp: App {
+    let itemStore = ItemStore()
+    let noteStore = NoteStore()
     var body: some Scene {
         WindowGroup {
             
@@ -16,9 +18,12 @@ struct Wish_RegistryApp: App {
                 RegistryView().tabItem {
                     Text("Items")
                 }.navigationTitle("Item Registry")
+                    .environment(itemStore)
+                    .environment(noteStore)
                 NoteRegistryView().tabItem {
                     Text("Notes")
                 }.navigationTitle("Note Registry")
+                    .environment(noteStore)
             }
             
         }
