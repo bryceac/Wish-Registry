@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @Environment(ItemStore.self) private var itemSore
+    @Environment(ItemStore.self) private var itemStore
     @Environment(NoteStore.self) private var noteStore
     @State private var showSaveSuccess = false
     @State private var isExporting = false
@@ -22,13 +22,13 @@ struct RegistryView: View {
         NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    ForEach(store.sortedItems) { item in
+                    ForEach(itemStore.sortedItems) { item in
                         
                         var itemBinding: Binding<Item> {
                             Binding {
                                 return item
                             } set: { newValue in
-                                store.update(item: newValue)
+                                itemStore.update(item: newValue)
                                 loadItems()
                             }
 
@@ -67,9 +67,9 @@ struct RegistryView: View {
                         }
 
                     }
-                }.onChange(of: store.items) {
-                    if let lastIndex = store.items.indices.last {
-                        proxy.scrollTo(store.items[lastIndex].id)
+                }.onChange(of: itemStore.items) {
+                    if let lastIndex = itemStore.items.indices.last {
+                        proxy.scrollTo(itemStore.items[lastIndex].id)
                     }
                 }
             }
@@ -79,7 +79,7 @@ struct RegistryView: View {
             }
         } message: {
             Text("Wishlist Exported Successfully.")
-        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: store.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
+        }.fileExporter(isPresented: $isExporting, document: WRFileDocument(items: itemStore.sortedItems.elements), contentType: exportFormat ?? .json, defaultFilename: "wishlist") { result in
             if case .success = result {
                 showSaveSuccess = true
             }
@@ -133,9 +133,9 @@ extension RegistryView {
         
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            let item = itemSore.sortedItems[index]
+            let item = itemStore.sortedItems[index]
                 
-            itemSore.remove(item: item)
+            itemStore.remove(item: item)
         }
     }
         
@@ -144,7 +144,7 @@ extension RegistryView {
             isLoading.toggle()
         }
             
-        itemSore.reload()
+        itemStore.reload()
         noteStore.reload()
         
         isLoading = false
@@ -163,7 +163,7 @@ extension RegistryView {
     }
         
     private func importItems(_ items: [Item]) {
-        itemSore.add(items: items)
+        itemStore.add(items: items)
             
         loadItems()
     }
