@@ -49,6 +49,7 @@ struct ItemDetailView: View {
                                 noteStore.unlink(note: note, froItemWithID: item.id)
                             } else {
                                 item.notes.append(note.content)
+                                noteStore.link(note: note, toItemWithID: item.id)
                             }
                         }
                     }
