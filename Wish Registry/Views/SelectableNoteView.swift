@@ -10,12 +10,10 @@ import SwiftUI
 struct SelectableNoteView: View {
     @Environment(NoteStore.self) private var noteStore
     @State var note: Note
-    var itemID: String
+    var itemNotes: [String]
     
     var isSelected: Bool {
-        guard let noteIDs = noteStore.noteLinks[itemID] else { return false }
-        
-        return noteIDs.contains(note.id)
+        return itemNotes.contains(note.content)
     }
     
     var action: () -> ()
