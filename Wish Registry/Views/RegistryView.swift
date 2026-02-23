@@ -10,7 +10,8 @@ import UniformTypeIdentifiers
 import IdentifiedCollections
 
 struct RegistryView: View {
-    @Environment(ItemStore.self) private var store
+    @Environment(ItemStore.self) private var itemSore
+    @Environment(NoteStore.self) private var noteStore
     @State private var showSaveSuccess = false
     @State private var isExporting = false
     @State private var isImporting = false
@@ -132,9 +133,9 @@ extension RegistryView {
         
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            let item = store.sortedItems[index]
+            let item = itemSore.sortedItems[index]
                 
-            store.remove(item: item)
+            itemSore.remove(item: item)
         }
     }
         
@@ -143,7 +144,8 @@ extension RegistryView {
             isLoading.toggle()
         }
             
-        store.reload()
+        itemSore.reload()
+        noteStore.reload()
         
         isLoading = false
     }
@@ -161,7 +163,7 @@ extension RegistryView {
     }
         
     private func importItems(_ items: [Item]) {
-        store.add(items: items)
+        itemSore.add(items: items)
             
         loadItems()
     }
