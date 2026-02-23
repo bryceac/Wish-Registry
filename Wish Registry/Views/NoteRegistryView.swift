@@ -23,8 +23,8 @@ struct NoteRegistryView: View {
                         }
                     }
                     
-                    NavigationLink(destination: NoteDetailView(note: noteBinding)) {
-                        NoteView(note: note).navigationTitle("Note Editor")
+                    NavigationLink(destination: NoteDetailView(note: noteBinding).navigationTitle("Note Editor")) {
+                        NoteView(note: note)
                     }
                 }.onDelete(perform: delete)
             }
