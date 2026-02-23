@@ -33,7 +33,7 @@ struct RegistryView: View {
 
                         }
                         NavigationLink {
-                            ItemDetailView(item: itemBinding)
+                            ItemDetailView(item: itemBinding).navigationTitle(itemBinding.name.isEmpty ? "Item Editor")
                         } label: {
                             ItemView(item: item)
                         }

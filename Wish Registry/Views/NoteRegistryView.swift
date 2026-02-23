@@ -15,7 +15,7 @@ struct NoteRegistryView: View {
             List {
                 ForEach(store.notes) { note in
                     
-                    var NoteBinding: Binding<Note> {
+                    var noteBinding: Binding<Note> {
                         Binding {
                             return note
                         } set: { newValue in
@@ -23,8 +23,8 @@ struct NoteRegistryView: View {
                         }
                     }
                     
-                    NavigationLink(destination: NoteDetailView(note: NoteBinding)) {
-                        NoteView(note: note)
+                    NavigationLink(destination: NoteDetailView(note: noteBinding)) {
+                        NoteView(note: note).navigationTitle("Note Editor")
                     }
                 }.onDelete(perform: delete)
             }
